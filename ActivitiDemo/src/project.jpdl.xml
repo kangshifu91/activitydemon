@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process key="project" name="project" xmlns="http://jbpm.org/4.4/jpdl">
+   <start g="40,111,48,48" name="start1">
+      <transition g="-28,-26" name="to任务节点" to="项目审核"/>
+   </start>
+   <task assignee="审批组" g="167,109,92,52" name="项目审核">
+      <transition g="-39,-25" name="to分支" to="exclusive1"/>
+   </task>
+   <task assignee="退回" g="352,291,92,52" name="退回申请人">
+      <transition g="-52,-22" name="to项目审核" to="项目审核"/>
+   </task>
+   <decision g="372,108,48,48" name="exclusive1">
+   	  <handler class="org.asdmp.restday.ProjectDecision" />
+      <transition g="-30,-23" name="toend" to="end1"/>
+      <transition g="13,-22" name="toapplier" to="退回申请人"/>
+   </decision>
+   <end g="530,109,48,48" name="end1"/>
+</process>

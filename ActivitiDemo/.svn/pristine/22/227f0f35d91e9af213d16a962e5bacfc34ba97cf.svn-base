@@ -1,0 +1,455 @@
+-- --------------------------------------------------------
+-- 主机:                           127.0.0.1
+-- 服务器版本:                        5.5.25 - MySQL Community Server (GPL)
+-- 服务器操作系统:                      Win64
+-- HeidiSQL 版本:              jbpmdb    9.1.0.4867
+-- --------------------------------------------------------
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+
+-- 导出 jbpm 的数据库结构
+
+
+-- 导出  表 jbpm.jbpm4_deployment 结构
+DROP TABLE IF EXISTS `jbpm4_deployment`;
+CREATE TABLE IF NOT EXISTS `jbpm4_deployment` (
+  `DBID_` bigint(20) NOT NULL,
+  `NAME_` longtext,
+  `TIMESTAMP_` bigint(20) DEFAULT NULL,
+  `STATE_` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`DBID_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 数据导出被取消选择。
+
+
+-- 导出  表 jbpm.jbpm4_deployprop 结构
+DROP TABLE IF EXISTS `jbpm4_deployprop`;
+CREATE TABLE IF NOT EXISTS `jbpm4_deployprop` (
+  `DBID_` bigint(20) NOT NULL,
+  `DEPLOYMENT_` bigint(20) DEFAULT NULL,
+  `OBJNAME_` varchar(255) DEFAULT NULL,
+  `KEY_` varchar(255) DEFAULT NULL,
+  `STRINGVAL_` varchar(255) DEFAULT NULL,
+  `LONGVAL_` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`DBID_`),
+  KEY `IDX_DEPLPROP_DEPL` (`DEPLOYMENT_`),
+  KEY `FK_DEPLPROP_DEPL` (`DEPLOYMENT_`),
+  CONSTRAINT `FK_DEPLPROP_DEPL` FOREIGN KEY (`DEPLOYMENT_`) REFERENCES `jbpm4_deployment` (`DBID_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 数据导出被取消选择。
+
+
+-- 导出  表 jbpm.jbpm4_execution 结构
+DROP TABLE IF EXISTS `jbpm4_execution`;
+CREATE TABLE IF NOT EXISTS `jbpm4_execution` (
+  `DBID_` bigint(20) NOT NULL,
+  `CLASS_` varchar(255) NOT NULL,
+  `DBVERSION_` int(11) NOT NULL,
+  `ACTIVITYNAME_` varchar(255) DEFAULT NULL,
+  `PROCDEFID_` varchar(255) DEFAULT NULL,
+  `HASVARS_` bit(1) DEFAULT NULL,
+  `NAME_` varchar(255) DEFAULT NULL,
+  `KEY_` varchar(255) DEFAULT NULL,
+  `ID_` varchar(255) DEFAULT NULL,
+  `STATE_` varchar(255) DEFAULT NULL,
+  `SUSPHISTSTATE_` varchar(255) DEFAULT NULL,
+  `PRIORITY_` int(11) DEFAULT NULL,
+  `HISACTINST_` bigint(20) DEFAULT NULL,
+  `PARENT_` bigint(20) DEFAULT NULL,
+  `INSTANCE_` bigint(20) DEFAULT NULL,
+  `SUPEREXEC_` bigint(20) DEFAULT NULL,
+  `SUBPROCINST_` bigint(20) DEFAULT NULL,
+  `PARENT_IDX_` int(11) DEFAULT NULL,
+  PRIMARY KEY (`DBID_`),
+  UNIQUE KEY `ID_` (`ID_`),
+  KEY `IDX_EXEC_SUPEREXEC` (`SUPEREXEC_`),
+  KEY `IDX_EXEC_INSTANCE` (`INSTANCE_`),
+  KEY `IDX_EXEC_SUBPI` (`SUBPROCINST_`),
+  KEY `IDX_EXEC_PARENT` (`PARENT_`),
+  KEY `FK_EXEC_PARENT` (`PARENT_`),
+  KEY `FK_EXEC_SUBPI` (`SUBPROCINST_`),
+  KEY `FK_EXEC_INSTANCE` (`INSTANCE_`),
+  KEY `FK_EXEC_SUPEREXEC` (`SUPEREXEC_`),
+  CONSTRAINT `FK_EXEC_INSTANCE` FOREIGN KEY (`INSTANCE_`) REFERENCES `jbpm4_execution` (`DBID_`),
+  CONSTRAINT `FK_EXEC_PARENT` FOREIGN KEY (`PARENT_`) REFERENCES `jbpm4_execution` (`DBID_`),
+  CONSTRAINT `FK_EXEC_SUBPI` FOREIGN KEY (`SUBPROCINST_`) REFERENCES `jbpm4_execution` (`DBID_`),
+  CONSTRAINT `FK_EXEC_SUPEREXEC` FOREIGN KEY (`SUPEREXEC_`) REFERENCES `jbpm4_execution` (`DBID_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 数据导出被取消选择。
+
+
+-- 导出  表 jbpm.jbpm4_hist_actinst 结构
+DROP TABLE IF EXISTS `jbpm4_hist_actinst`;
+CREATE TABLE IF NOT EXISTS `jbpm4_hist_actinst` (
+  `DBID_` bigint(20) NOT NULL,
+  `CLASS_` varchar(255) NOT NULL,
+  `DBVERSION_` int(11) NOT NULL,
+  `HPROCI_` bigint(20) DEFAULT NULL,
+  `engine_` varchar(255) DEFAULT NULL,
+  `EXECUTION_` varchar(255) DEFAULT NULL,
+  `ACTIVITY_NAME_` varchar(255) DEFAULT NULL,
+  `START_` datetime DEFAULT NULL,
+  `END_` datetime DEFAULT NULL,
+  `DURATION_` bigint(20) DEFAULT NULL,
+  `TRANSITION_` varchar(255) DEFAULT NULL,
+  `NEXTIDX_` int(11) DEFAULT NULL,
+  `HTASK_` bigint(20) DEFAULT NULL,
+  `TYPE_` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`DBID_`),
+  KEY `IDX_HACTI_HPROCI` (`HPROCI_`),
+  KEY `IDX_HTI_HTASK` (`HTASK_`),
+  KEY `FK_HACTI_HPROCI` (`HPROCI_`),
+  KEY `FK_HTI_HTASK` (`HTASK_`),
+  CONSTRAINT `FK_HACTI_HPROCI` FOREIGN KEY (`HPROCI_`) REFERENCES `jbpm4_hist_procinst` (`DBID_`),
+  CONSTRAINT `FK_HTI_HTASK` FOREIGN KEY (`HTASK_`) REFERENCES `jbpm4_hist_task` (`DBID_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 数据导出被取消选择。
+
+
+-- 导出  表 jbpm.jbpm4_hist_detail 结构
+DROP TABLE IF EXISTS `jbpm4_hist_detail`;
+CREATE TABLE IF NOT EXISTS `jbpm4_hist_detail` (
+  `DBID_` bigint(20) NOT NULL,
+  `CLASS_` varchar(255) NOT NULL,
+  `DBVERSION_` int(11) NOT NULL,
+  `USERID_` varchar(255) DEFAULT NULL,
+  `TIME_` datetime DEFAULT NULL,
+  `HPROCI_` bigint(20) DEFAULT NULL,
+  `HPROCIIDX_` int(11) DEFAULT NULL,
+  `HACTI_` bigint(20) DEFAULT NULL,
+  `HACTIIDX_` int(11) DEFAULT NULL,
+  `HTASK_` bigint(20) DEFAULT NULL,
+  `HTASKIDX_` int(11) DEFAULT NULL,
+  `HVAR_` bigint(20) DEFAULT NULL,
+  `HVARIDX_` int(11) DEFAULT NULL,
+  `MESSAGE_` longtext,
+  `OLD_STR_` varchar(255) DEFAULT NULL,
+  `NEW_STR_` varchar(255) DEFAULT NULL,
+  `OLD_INT_` int(11) DEFAULT NULL,
+  `NEW_INT_` int(11) DEFAULT NULL,
+  `OLD_TIME_` datetime DEFAULT NULL,
+  `NEW_TIME_` datetime DEFAULT NULL,
+  `PARENT_` bigint(20) DEFAULT NULL,
+  `PARENT_IDX_` int(11) DEFAULT NULL,
+  PRIMARY KEY (`DBID_`),
+  KEY `IDX_HDET_HACTI` (`HACTI_`),
+  KEY `IDX_HDET_HPROCI` (`HPROCI_`),
+  KEY `IDX_HDET_HVAR` (`HVAR_`),
+  KEY `IDX_HDET_HTASK` (`HTASK_`),
+  KEY `FK_HDETAIL_HPROCI` (`HPROCI_`),
+  KEY `FK_HDETAIL_HACTI` (`HACTI_`),
+  KEY `FK_HDETAIL_HTASK` (`HTASK_`),
+  KEY `FK_HDETAIL_HVAR` (`HVAR_`),
+  CONSTRAINT `FK_HDETAIL_HACTI` FOREIGN KEY (`HACTI_`) REFERENCES `jbpm4_hist_actinst` (`DBID_`),
+  CONSTRAINT `FK_HDETAIL_HPROCI` FOREIGN KEY (`HPROCI_`) REFERENCES `jbpm4_hist_procinst` (`DBID_`),
+  CONSTRAINT `FK_HDETAIL_HTASK` FOREIGN KEY (`HTASK_`) REFERENCES `jbpm4_hist_task` (`DBID_`),
+  CONSTRAINT `FK_HDETAIL_HVAR` FOREIGN KEY (`HVAR_`) REFERENCES `jbpm4_hist_var` (`DBID_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 数据导出被取消选择。
+
+
+-- 导出  表 jbpm.jbpm4_hist_procinst 结构
+DROP TABLE IF EXISTS `jbpm4_hist_procinst`;
+CREATE TABLE IF NOT EXISTS `jbpm4_hist_procinst` (
+  `DBID_` bigint(20) NOT NULL,
+  `DBVERSION_` int(11) NOT NULL,
+  `ID_` varchar(255) DEFAULT NULL,
+  `PROCDEFID_` varchar(255) DEFAULT NULL,
+  `KEY_` varchar(255) DEFAULT NULL,
+  `START_` datetime DEFAULT NULL,
+  `END_` datetime DEFAULT NULL,
+  `DURATION_` bigint(20) DEFAULT NULL,
+  `STATE_` varchar(255) DEFAULT NULL,
+  `ENDACTIVITY_` varchar(255) DEFAULT NULL,
+  `NEXTIDX_` int(11) DEFAULT NULL,
+  PRIMARY KEY (`DBID_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 数据导出被取消选择。
+
+
+-- 导出  表 jbpm.jbpm4_hist_task 结构
+DROP TABLE IF EXISTS `jbpm4_hist_task`;
+CREATE TABLE IF NOT EXISTS `jbpm4_hist_task` (
+  `DBID_` bigint(20) NOT NULL,
+  `DBVERSION_` int(11) NOT NULL,
+  `EXECUTION_` varchar(255) DEFAULT NULL,
+  `OUTCOME_` varchar(255) DEFAULT NULL,
+  `ASSIGNEE_` varchar(255) DEFAULT NULL,
+  `PRIORITY_` int(11) DEFAULT NULL,
+  `STATE_` varchar(255) DEFAULT NULL,
+  `CREATE_` datetime DEFAULT NULL,
+  `END_` datetime DEFAULT NULL,
+  `DURATION_` bigint(20) DEFAULT NULL,
+  `NEXTIDX_` int(11) DEFAULT NULL,
+  `SUPERTASK_` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`DBID_`),
+  KEY `IDX_HSUPERT_SUB` (`SUPERTASK_`),
+  KEY `FK_HSUPERT_SUB` (`SUPERTASK_`),
+  CONSTRAINT `FK_HSUPERT_SUB` FOREIGN KEY (`SUPERTASK_`) REFERENCES `jbpm4_hist_task` (`DBID_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 数据导出被取消选择。
+
+
+-- 导出  表 jbpm.jbpm4_hist_var 结构
+DROP TABLE IF EXISTS `jbpm4_hist_var`;
+CREATE TABLE IF NOT EXISTS `jbpm4_hist_var` (
+  `DBID_` bigint(20) NOT NULL,
+  `DBVERSION_` int(11) NOT NULL,
+  `PROCINSTID_` varchar(255) DEFAULT NULL,
+  `EXECUTIONID_` varchar(255) DEFAULT NULL,
+  `VARNAME_` varchar(255) DEFAULT NULL,
+  `VALUE_` varchar(255) DEFAULT NULL,
+  `HPROCI_` bigint(20) DEFAULT NULL,
+  `HTASK_` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`DBID_`),
+  KEY `IDX_HVAR_HPROCI` (`HPROCI_`),
+  KEY `IDX_HVAR_HTASK` (`HTASK_`),
+  KEY `FK_HVAR_HPROCI` (`HPROCI_`),
+  KEY `FK_HVAR_HTASK` (`HTASK_`),
+  CONSTRAINT `FK_HVAR_HPROCI` FOREIGN KEY (`HPROCI_`) REFERENCES `jbpm4_hist_procinst` (`DBID_`),
+  CONSTRAINT `FK_HVAR_HTASK` FOREIGN KEY (`HTASK_`) REFERENCES `jbpm4_hist_task` (`DBID_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 数据导出被取消选择。
+
+
+-- 导出  表 jbpm.jbpm4_id_group 结构
+DROP TABLE IF EXISTS `jbpm4_id_group`;
+CREATE TABLE IF NOT EXISTS `jbpm4_id_group` (
+  `DBID_` bigint(20) NOT NULL,
+  `DBVERSION_` int(11) NOT NULL,
+  `ID_` varchar(255) DEFAULT NULL,
+  `NAME_` varchar(255) DEFAULT NULL,
+  `engine_` varchar(255) DEFAULT NULL,
+  `PARENT_` bigint(20) DEFAULT NULL,
+  `TYPE_` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`DBID_`),
+  KEY `IDX_GROUP_PARENT` (`PARENT_`),
+  KEY `FK_GROUP_PARENT` (`PARENT_`),
+  CONSTRAINT `FK_GROUP_PARENT` FOREIGN KEY (`PARENT_`) REFERENCES `jbpm4_id_group` (`DBID_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 数据导出被取消选择。
+
+
+-- 导出  表 jbpm.jbpm4_id_membership 结构
+DROP TABLE IF EXISTS `jbpm4_id_membership`;
+CREATE TABLE IF NOT EXISTS `jbpm4_id_membership` (
+  `DBID_` bigint(20) NOT NULL,
+  `DBVERSION_` int(11) NOT NULL,
+  `USER_` bigint(20) DEFAULT NULL,
+  `GROUP_` bigint(20) DEFAULT NULL,
+  `NAME_` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`DBID_`),
+  KEY `IDX_MEM_USER` (`USER_`),
+  KEY `IDX_MEM_GROUP` (`GROUP_`),
+  KEY `FK_MEM_GROUP` (`GROUP_`),
+  KEY `FK_MEM_USER` (`USER_`),
+  CONSTRAINT `FK_MEM_GROUP` FOREIGN KEY (`GROUP_`) REFERENCES `jbpm4_id_group` (`DBID_`),
+  CONSTRAINT `FK_MEM_USER` FOREIGN KEY (`USER_`) REFERENCES `jbpm4_id_user` (`DBID_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 数据导出被取消选择。
+
+
+-- 导出  表 jbpm.jbpm4_id_user 结构
+DROP TABLE IF EXISTS `jbpm4_id_user`;
+CREATE TABLE IF NOT EXISTS `jbpm4_id_user` (
+  `DBID_` bigint(20) NOT NULL,
+  `DBVERSION_` int(11) NOT NULL,
+  `ID_` varchar(255) DEFAULT NULL,
+  `PASSWORD_` varchar(255) DEFAULT NULL,
+  `GIVENNAME_` varchar(255) DEFAULT NULL,
+  `FAMILYNAME_` varchar(255) DEFAULT NULL,
+  `BUSINESSEMAIL_` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`DBID_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 数据导出被取消选择。
+
+
+-- 导出  表 jbpm.jbpm4_job 结构
+DROP TABLE IF EXISTS `jbpm4_job`;
+CREATE TABLE IF NOT EXISTS `jbpm4_job` (
+  `DBID_` bigint(20) NOT NULL,
+  `CLASS_` varchar(255) NOT NULL,
+  `DBVERSION_` int(11) NOT NULL,
+  `DUEDATE_` datetime DEFAULT NULL,
+  `STATE_` varchar(255) DEFAULT NULL,
+  `ISEXCLUSIVE_` bit(1) DEFAULT NULL,
+  `LOCKOWNER_` varchar(255) DEFAULT NULL,
+  `LOCKEXPTIME_` datetime DEFAULT NULL,
+  `EXCEPTION_` longtext,
+  `RETRIES_` int(11) DEFAULT NULL,
+  `PROCESSINSTANCE_` bigint(20) DEFAULT NULL,
+  `EXECUTION_` bigint(20) DEFAULT NULL,
+  `CFG_` bigint(20) DEFAULT NULL,
+  `SIGNAL_` varchar(255) DEFAULT NULL,
+  `EVENT_` varchar(255) DEFAULT NULL,
+  `REPEAT_` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`DBID_`),
+  KEY `IDX_JOBRETRIES` (`RETRIES_`),
+  KEY `IDX_JOB_CFG` (`CFG_`),
+  KEY `IDX_JOB_PRINST` (`PROCESSINSTANCE_`),
+  KEY `IDX_JOB_EXE` (`EXECUTION_`),
+  KEY `IDX_JOBLOCKEXP` (`LOCKEXPTIME_`),
+  KEY `IDX_JOBDUEDATE` (`DUEDATE_`),
+  KEY `FK_JOB_CFG` (`CFG_`),
+  CONSTRAINT `FK_JOB_CFG` FOREIGN KEY (`CFG_`) REFERENCES `jbpm4_lob` (`DBID_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 数据导出被取消选择。
+
+
+-- 导出  表 jbpm.jbpm4_lob 结构
+DROP TABLE IF EXISTS `jbpm4_lob`;
+CREATE TABLE IF NOT EXISTS `jbpm4_lob` (
+  `DBID_` bigint(20) NOT NULL,
+  `DBVERSION_` int(11) NOT NULL,
+  `BLOB_VALUE_` longblob,
+  `DEPLOYMENT_` bigint(20) DEFAULT NULL,
+  `NAME_` longtext,
+  PRIMARY KEY (`DBID_`),
+  KEY `IDX_LOB_DEPLOYMENT` (`DEPLOYMENT_`),
+  KEY `FK_LOB_DEPLOYMENT` (`DEPLOYMENT_`),
+  CONSTRAINT `FK_LOB_DEPLOYMENT` FOREIGN KEY (`DEPLOYMENT_`) REFERENCES `jbpm4_deployment` (`DBID_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 数据导出被取消选择。
+
+
+-- 导出  表 jbpm.jbpm4_participation 结构
+DROP TABLE IF EXISTS `jbpm4_participation`;
+CREATE TABLE IF NOT EXISTS `jbpm4_participation` (
+  `DBID_` bigint(20) NOT NULL,
+  `DBVERSION_` int(11) NOT NULL,
+  `GROUPID_` varchar(255) DEFAULT NULL,
+  `USERID_` varchar(255) DEFAULT NULL,
+  `engine_` varchar(255) DEFAULT NULL,
+  `TASK_` bigint(20) DEFAULT NULL,
+  `SWIMLANE_` bigint(20) DEFAULT NULL,
+  `TYPE_` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`DBID_`),
+  KEY `IDX_PART_TASK` (`TASK_`),
+  KEY `FK_PART_SWIMLANE` (`SWIMLANE_`),
+  KEY `FK_PART_TASK` (`TASK_`),
+  CONSTRAINT `FK_PART_SWIMLANE` FOREIGN KEY (`SWIMLANE_`) REFERENCES `jbpm4_swimlane` (`DBID_`),
+  CONSTRAINT `FK_PART_TASK` FOREIGN KEY (`TASK_`) REFERENCES `jbpm4_task` (`DBID_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 数据导出被取消选择。
+
+
+-- 导出  表 jbpm.jbpm4_property 结构
+DROP TABLE IF EXISTS `jbpm4_property`;
+CREATE TABLE IF NOT EXISTS `jbpm4_property` (
+  `KEY_` varchar(255) NOT NULL,
+  `VERSION_` int(11) NOT NULL,
+  `VALUE_` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`KEY_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 数据导出被取消选择。
+
+
+-- 导出  表 jbpm.jbpm4_swimlane 结构
+DROP TABLE IF EXISTS `jbpm4_swimlane`;
+CREATE TABLE IF NOT EXISTS `jbpm4_swimlane` (
+  `DBID_` bigint(20) NOT NULL,
+  `DBVERSION_` int(11) NOT NULL,
+  `NAME_` varchar(255) DEFAULT NULL,
+  `ASSIGNEE_` varchar(255) DEFAULT NULL,
+  `EXECUTION_` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`DBID_`),
+  KEY `IDX_SWIMLANE_EXEC` (`EXECUTION_`),
+  KEY `FK_SWIMLANE_EXEC` (`EXECUTION_`),
+  CONSTRAINT `FK_SWIMLANE_EXEC` FOREIGN KEY (`EXECUTION_`) REFERENCES `jbpm4_execution` (`DBID_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 数据导出被取消选择。
+
+
+-- 导出  表 jbpm.jbpm4_task 结构
+DROP TABLE IF EXISTS `jbpm4_task`;
+CREATE TABLE IF NOT EXISTS `jbpm4_task` (
+  `DBID_` bigint(20) NOT NULL,
+  `CLASS_` char(1) NOT NULL,
+  `DBVERSION_` int(11) NOT NULL,
+  `NAME_` varchar(255) DEFAULT NULL,
+  `DESCR_` longtext,
+  `STATE_` varchar(255) DEFAULT NULL,
+  `SUSPHISTSTATE_` varchar(255) DEFAULT NULL,
+  `ASSIGNEE_` varchar(255) DEFAULT NULL,
+  `FORM_` varchar(255) DEFAULT NULL,
+  `PRIORITY_` int(11) DEFAULT NULL,
+  `CREATE_` datetime DEFAULT NULL,
+  `DUEDATE_` datetime DEFAULT NULL,
+  `PROGRESS_` int(11) DEFAULT NULL,
+  `SIGNALLING_` bit(1) DEFAULT NULL,
+  `EXECUTION_ID_` varchar(255) DEFAULT NULL,
+  `ACTIVITY_NAME_` varchar(255) DEFAULT NULL,
+  `HASVARS_` bit(1) DEFAULT NULL,
+  `SUPERTASK_` bigint(20) DEFAULT NULL,
+  `EXECUTION_` bigint(20) DEFAULT NULL,
+  `PROCINST_` bigint(20) DEFAULT NULL,
+  `SWIMLANE_` bigint(20) DEFAULT NULL,
+  `TASKDEFNAME_` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`DBID_`),
+  KEY `IDX_TASK_SUPERTASK` (`SUPERTASK_`),
+  KEY `FK_TASK_SWIML` (`SWIMLANE_`),
+  KEY `FK_TASK_SUPERTASK` (`SUPERTASK_`),
+  CONSTRAINT `FK_TASK_SUPERTASK` FOREIGN KEY (`SUPERTASK_`) REFERENCES `jbpm4_task` (`DBID_`),
+  CONSTRAINT `FK_TASK_SWIML` FOREIGN KEY (`SWIMLANE_`) REFERENCES `jbpm4_swimlane` (`DBID_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 数据导出被取消选择。
+
+
+-- 导出  表 jbpm.jbpm4_variable 结构
+DROP TABLE IF EXISTS `jbpm4_variable`;
+CREATE TABLE IF NOT EXISTS `jbpm4_variable` (
+  `DBID_` bigint(20) NOT NULL,
+  `CLASS_` varchar(255) NOT NULL,
+  `DBVERSION_` int(11) NOT NULL,
+  `KEY_` varchar(255) DEFAULT NULL,
+  `CONVERTER_` varchar(255) DEFAULT NULL,
+  `HIST_` bit(1) DEFAULT NULL,
+  `EXECUTION_` bigint(20) DEFAULT NULL,
+  `TASK_` bigint(20) DEFAULT NULL,
+  `LOB_` bigint(20) DEFAULT NULL,
+  `DATE_VALUE_` datetime DEFAULT NULL,
+  `DOUBLE_VALUE_` double DEFAULT NULL,
+  `CLASSNAME_` varchar(255) DEFAULT NULL,
+  `LONG_VALUE_` bigint(20) DEFAULT NULL,
+  `STRING_VALUE_` varchar(255) DEFAULT NULL,
+  `TEXT_VALUE_` longtext,
+  `EXESYS_` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`DBID_`),
+  KEY `IDX_VAR_EXESYS` (`EXESYS_`),
+  KEY `IDX_VAR_TASK` (`TASK_`),
+  KEY `IDX_VAR_EXECUTION` (`EXECUTION_`),
+  KEY `IDX_VAR_LOB` (`LOB_`),
+  KEY `FK_VAR_LOB` (`LOB_`),
+  KEY `FK_VAR_EXECUTION` (`EXECUTION_`),
+  KEY `FK_VAR_EXESYS` (`EXESYS_`),
+  KEY `FK_VAR_TASK` (`TASK_`),
+  CONSTRAINT `FK_VAR_EXECUTION` FOREIGN KEY (`EXECUTION_`) REFERENCES `jbpm4_execution` (`DBID_`),
+  CONSTRAINT `FK_VAR_EXESYS` FOREIGN KEY (`EXESYS_`) REFERENCES `jbpm4_execution` (`DBID_`),
+  CONSTRAINT `FK_VAR_LOB` FOREIGN KEY (`LOB_`) REFERENCES `jbpm4_lob` (`DBID_`),
+  CONSTRAINT `FK_VAR_TASK` FOREIGN KEY (`TASK_`) REFERENCES `jbpm4_task` (`DBID_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 数据导出被取消选择。
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

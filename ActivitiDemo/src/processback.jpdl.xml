@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process name="DecisionConditions" xmlns="http://jbpm.org/4.4/jpdl">
+
+  <start g="545,3,48,48">
+      <transition name="to 发起申请" to="发起申请" g="-71,-17"/>
+  </start>
+   <task g="488,189,134,52" name="团队负责人审批">
+      <transition name="to 中心主任审批" to="中心主任审批" g="-95,-17"/>
+   </task>
+   <task g="469,310,159,52" name="中心主任审批">
+      <transition name="to exclusive2" to="exclusive2" g="-83,-17"/>
+   </task>
+   <task name="发起申请" g="525,94,92,52">
+      <transition name="to 团队负责人审批" to="团队负责人审批" g="-107,-17"/>
+   </task>
+   <task name="部长审批" g="492,404,92,52">
+      <transition name="to exclusive1" to="exclusive1" g="-83,-17"/>
+   </task>
+   <decision name="exclusive1" g="308,414,48,48">
+      <transition name="to 发起申请" to="发起申请" g="135,418;138,111:34,-173"/>
+      <transition name="to 中心主任审批" to="中心主任审批" g="406,337:-95,-17"/>
+      <transition name="to 团队负责人审批" to="团队负责人审批" g="224,386;216,217:14,-101"/>
+      <transition name="to end1" to="end1" g="-47,-17"/>
+   </decision>
+   <end name="end1" g="312,526,48,48"/>
+   <decision name="exclusive2" g="785,320,48,48">
+      <transition name="to 发起申请" to="发起申请" g="896,347;1019,152:5,2"/>
+      <transition name="to 团队负责人审批" to="团队负责人审批" g="813,218:2,-9"/>
+      <transition name="to end1" to="部长审批" g="-47,-17"/>
+   </decision>
+
+</process>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process key="myprocess" name="myprocess" xmlns="http://jbpm.org/4.4/jpdl">
+
+  <start g="16,102,48,48">
+      <transition g="-66,-20" name="to 发起项目立项申请" to="发起项目立项申请"/>
+  </start>
+   <task assignee="申请人" g="204,98,134,52" name="发起项目立项申请">
+      <transition g="-50,-19" name="to 综合办公室审批" to="综合办公室审批"/>
+   </task>
+   <task assignee="综合办公室" g="457,99,159,52" name="综合办公室审批">
+      <transition g="-33,-20" name="to exclusive1" to="exclusive1"/>
+   </task>
+   <decision g="675,98,48,48" name="exclusive1">
+   	  <handler class="org.asdmp.restday.MyProcessDecision" />
+      <transition g="700,219;271,220:-119,-17" name="to 发起项目立项申请" to="发起项目立项申请"/>
+      <transition g="-47,-17" name="to end1" to="end1"/> 
+   </decision>
+   <end g="833,98,48,48" name="end1"/>
+
+</process>

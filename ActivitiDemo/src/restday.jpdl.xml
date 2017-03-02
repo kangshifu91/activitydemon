@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process key="restday" name="restday" xmlns="http://jbpm.org/4.4/jpdl">
+   <start g="233,36,48,48" name="start1">
+      <transition g="-65,-17" name="todecision" to="exclusive1"/>
+   </start>
+   <task assignee="组长" g="101,234,92,52" name="组长">
+      <transition g="-50,-22" name="to end1" to="end1"/>
+   </task>
+   <task assignee="科长" g="224,233,92,52" name="科长">
+      <transition g="-50,-22" name="to end1" to="end1"/>
+   </task>
+   <task assignee="部长" g="344,236,92,52" name="部长">
+      <transition g="-50,-22" name="to end1" to="end1"/>
+   </task>
+   <decision g="233,138,48,48" name="exclusive1">
+      <handler class="org.asdmp.restday.MyDecision" />
+      <transition g="-52,-22" name="tozuzhang" to="组长"/>
+      <transition g="-27,-6" name="tokezhang" to="科长"/>
+      <transition g="9,-10" name="tobuzhang" to="部长"/>
+   </decision>
+   <end g="241,357,48,48" name="end1"/>
+</process>
